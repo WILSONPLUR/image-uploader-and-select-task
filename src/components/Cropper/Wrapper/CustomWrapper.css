@@ -1,0 +1,13 @@
+.custom-wrapper {
+  flex-grow: 1;
+  min-height: 0;
+}
+.custom-wrapper__navigation {
+  width: 100%;
+  background: rgba(215, 226, 233, 0.8);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}

@@ -1,0 +1,69 @@
+.absolute-zoom-cropper-navigation {
+  height: 80px;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+
+.absolute-zoom-cropper-navigation-container {
+  display: flex;
+  width: 462px;
+}
+
+.absolute-zoom-cropper-navigation__delimiter {
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.absolute-zoom-cropper-navigation__dot {
+  width: 6px;
+  height: 6px;
+  background: #393939;
+  border-radius: 50%;
+  transform: scale(1);
+  transition: transform 0.5s;
+}
+.absolute-zoom-cropper-navigation__dot--hidden {
+  transform: scale(0);
+}
+.absolute-zoom-cropper-navigation__button {
+  will-change: transform;
+  cursor: pointer;
+  width: 80px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  outline: none;
+  transition: transform 0.5s;
+  padding: 0;
+}
+.absolute-zoom-cropper-navigation__button:hover,
+.absolute-zoom-cropper-navigation__button:focus {
+  transform: scale(1.1);
+}
+.absolute-zoom-cropper-navigation__reset-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transition: transform 0.5s;
+  transition-delay: 0.25s;
+}
+.absolute-zoom-cropper-navigation__reset-button,
+.absolute-zoom-cropper-navigation__reset-button:hover,
+.absolute-zoom-cropper-navigation__reset-button:focus {
+  transform: translate(-50%, -50%) scale(1);
+}
+.absolute-zoom-cropper-navigation__reset-button--hidden {
+  transition-delay: 0s;
+}
+.absolute-zoom-cropper-navigation__reset-button--hidden,
+.absolute-zoom-cropper-navigation__reset-button--hidden:hover,
+.absolute-zoom-cropper-navigation__reset-button--hidden:focus {
+  transform: translate(-50%, -50%) scale(0);
+}
