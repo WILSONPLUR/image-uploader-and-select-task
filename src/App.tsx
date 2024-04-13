@@ -91,6 +91,8 @@ function App() {
           <div className="flex flex-col">
             {!cropped ? (
               <CustomCropper
+                maxWidth={340}
+                maxHeight={291}
                 stencilSize={{ height: 300, width: 300 }}
                 src={file}
                 ref={cropperRef}
