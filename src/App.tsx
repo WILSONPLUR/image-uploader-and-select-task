@@ -1,41 +1,28 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import "react-image-crop/dist/ReactCrop.css";
 import AddPhotoIcon from "./assets/icons/AddPhotoIcon.svg";
 import UploadIcon from "./assets/icons/UploadIcon.svg";
 import AllDoneIcon from "./assets/icons/AllDoneIcon.svg";
 import "./App.css";
 import { Layout } from "./components/layout";
-import { CropperRef, FixedCropperRef } from "react-advanced-cropper";
+import { FixedCropperRef } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
-import { Button } from "./components/ui/Button/Button";
 import Dropzone, { FileWithPath } from "react-dropzone";
 import { CustomCropper } from "./components/Cropper/CustomCropper";
 import { Select } from "./components/ui/Select/Select";
+import { MainContext, MainContextProps } from "./context/MainContext";
 
 function App() {
   const cropperRef = useRef<FixedCropperRef>(null);
-  const [file, setFile] = useState<string | null>(null);
   const [isValid, setIsValid] = useState<boolean>(false);
-  const [cropped, setIsCropped] = useState<boolean>(false);
-  const [showIcon, setShowIcon] = useState<boolean>(false);
+  const { file, setFile, cropped, showIcon, setShowIcon }: MainContextProps =
+    useContext(MainContext);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) setFile(URL.createObjectURL(e.target.files[0]));
   };
-  const onChange = (cropper: CropperRef) => {
-    console.log(cropper.getCoordinates(), cropper.getCanvas());
-  };
-  async function downloadImage(imageSrc: string) {
-    const image = await fetch(imageSrc);
-    const imageBlog = await image.blob();
-    const imageURL = URL.createObjectURL(imageBlog);
+  // const onChange = (cropper: CropperRef) => {};
 
-    const link = document.createElement("a");
-    link.href = imageURL;
-    link.download = "final_photo.png";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     acceptedFiles.map((file) => {
       const image = new Image();
@@ -60,14 +47,6 @@ function App() {
       setFile(URL.createObjectURL(file));
     });
   }, []);
-
-  const onCrop = () => {
-    const cropper = cropperRef?.current;
-    setFile(cropper?.getCanvas()?.toDataURL() || "");
-    setIsCropped(true);
-    if (cropper) downloadImage(cropper?.getCanvas()?.toDataURL() || "");
-    setShowIcon(true);
-  };
 
   useEffect(() => {
     const fileUpload = document.getElementById(
@@ -111,25 +90,55 @@ function App() {
         {file && isValid ? (
           <div className="flex flex-col">
             {!cropped ? (
-              <>
-                <CustomCropper
-                  stencilSize={{ height: 300, width: 300 }}
-                  src={file}
-                  onChange={onChange}
-                  ref={cropperRef}
-                  className={"cropper"}
-                />
-                <Button classNames="bg-gray-200" onClick={onCrop}>
-                  Обрізати
-                </Button>
-              </>
+              <CustomCropper
+                stencilSize={{ height: 300, width: 300 }}
+                src={file}
+                ref={cropperRef}
+                className={"cropper"}
+              />
             ) : (
               <div className="flex items-center justify-center">
-                <img
-                  src={file}
-                  alt="photo"
-                  className="rounded-lg w-md-1 h-[291px] relative"
-                />
+                {!showIcon && cropped && (
+                  <Dropzone
+                    accept={{
+                      "image/jpeg": [],
+                      "image/png": [],
+                      "image/heif": [],
+                      "image/heic": [],
+                      "image/jpg": [],
+                      "image/svg": [],
+                    }}
+                    maxFiles={1}
+                    maxSize={20000000}
+                    onDrop={onDrop}
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <div {...getRootProps()}>
+                        <img
+                          src={file}
+                          alt="photo"
+                          className="rounded-lg w-md-1 h-full relative"
+                        />
+                        <input
+                          id="dropzone-file"
+                          type="file"
+                          max={1}
+                          accept="image/png, image/jpeg, image/jpg , image/heic, image/heif"
+                          onChange={handleChange}
+                          {...getInputProps()}
+                          className="hidden"
+                        />
+                      </div>
+                    )}
+                  </Dropzone>
+                )}
+                {showIcon && cropped && (
+                  <img
+                    src={file}
+                    alt="photo"
+                    className="rounded-lg w-md-1 h-full relative"
+                  />
+                )}
 
                 {showIcon && (
                   <img src={AllDoneIcon} alt="done" className="absolute done" />

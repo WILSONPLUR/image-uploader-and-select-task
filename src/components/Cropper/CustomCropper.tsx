@@ -20,7 +20,7 @@ export const CustomCropper = forwardRef<CustomCropperRef, CustomCropperProps>(
           resizable: false,
           ...stencilProps,
         }}
-        imageRestriction={ImageRestriction.stencil}
+        imageRestriction={ImageRestriction.fillArea}
         wrapperComponent={CustomWrapper}
         {...props}
       />
